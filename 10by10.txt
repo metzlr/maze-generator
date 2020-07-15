@@ -1,0 +1,442 @@
+seed	1594432005
+vertex	0	0.000	0.000
+vertex	1	0.000	1.000
+vertex	2	0.000	2.000
+vertex	3	0.000	3.000
+vertex	4	0.000	4.000
+vertex	5	0.000	5.000
+vertex	6	0.000	6.000
+vertex	7	0.000	7.000
+vertex	8	0.000	8.000
+vertex	9	0.000	9.000
+vertex	10	0.000	10.000
+vertex	11	1.000	0.000
+vertex	12	1.000	1.000
+vertex	13	1.000	2.000
+vertex	14	1.000	3.000
+vertex	15	1.000	4.000
+vertex	16	1.000	5.000
+vertex	17	1.000	6.000
+vertex	18	1.000	7.000
+vertex	19	1.000	8.000
+vertex	20	1.000	9.000
+vertex	21	1.000	10.000
+vertex	22	2.000	0.000
+vertex	23	2.000	1.000
+vertex	24	2.000	2.000
+vertex	25	2.000	3.000
+vertex	26	2.000	4.000
+vertex	27	2.000	5.000
+vertex	28	2.000	6.000
+vertex	29	2.000	7.000
+vertex	30	2.000	8.000
+vertex	31	2.000	9.000
+vertex	32	2.000	10.000
+vertex	33	3.000	0.000
+vertex	34	3.000	1.000
+vertex	35	3.000	2.000
+vertex	36	3.000	3.000
+vertex	37	3.000	4.000
+vertex	38	3.000	5.000
+vertex	39	3.000	6.000
+vertex	40	3.000	7.000
+vertex	41	3.000	8.000
+vertex	42	3.000	9.000
+vertex	43	3.000	10.000
+vertex	44	4.000	0.000
+vertex	45	4.000	1.000
+vertex	46	4.000	2.000
+vertex	47	4.000	3.000
+vertex	48	4.000	4.000
+vertex	49	4.000	5.000
+vertex	50	4.000	6.000
+vertex	51	4.000	7.000
+vertex	52	4.000	8.000
+vertex	53	4.000	9.000
+vertex	54	4.000	10.000
+vertex	55	5.000	0.000
+vertex	56	5.000	1.000
+vertex	57	5.000	2.000
+vertex	58	5.000	3.000
+vertex	59	5.000	4.000
+vertex	60	5.000	5.000
+vertex	61	5.000	6.000
+vertex	62	5.000	7.000
+vertex	63	5.000	8.000
+vertex	64	5.000	9.000
+vertex	65	5.000	10.000
+vertex	66	6.000	0.000
+vertex	67	6.000	1.000
+vertex	68	6.000	2.000
+vertex	69	6.000	3.000
+vertex	70	6.000	4.000
+vertex	71	6.000	5.000
+vertex	72	6.000	6.000
+vertex	73	6.000	7.000
+vertex	74	6.000	8.000
+vertex	75	6.000	9.000
+vertex	76	6.000	10.000
+vertex	77	7.000	0.000
+vertex	78	7.000	1.000
+vertex	79	7.000	2.000
+vertex	80	7.000	3.000
+vertex	81	7.000	4.000
+vertex	82	7.000	5.000
+vertex	83	7.000	6.000
+vertex	84	7.000	7.000
+vertex	85	7.000	8.000
+vertex	86	7.000	9.000
+vertex	87	7.000	10.000
+vertex	88	8.000	0.000
+vertex	89	8.000	1.000
+vertex	90	8.000	2.000
+vertex	91	8.000	3.000
+vertex	92	8.000	4.000
+vertex	93	8.000	5.000
+vertex	94	8.000	6.000
+vertex	95	8.000	7.000
+vertex	96	8.000	8.000
+vertex	97	8.000	9.000
+vertex	98	8.000	10.000
+vertex	99	9.000	0.000
+vertex	100	9.000	1.000
+vertex	101	9.000	2.000
+vertex	102	9.000	3.000
+vertex	103	9.000	4.000
+vertex	104	9.000	5.000
+vertex	105	9.000	6.000
+vertex	106	9.000	7.000
+vertex	107	9.000	8.000
+vertex	108	9.000	9.000
+vertex	109	9.000	10.000
+vertex	110	10.000	0.000
+vertex	111	10.000	1.000
+vertex	112	10.000	2.000
+vertex	113	10.000	3.000
+vertex	114	10.000	4.000
+vertex	115	10.000	5.000
+vertex	116	10.000	6.000
+vertex	117	10.000	7.000
+vertex	118	10.000	8.000
+vertex	119	10.000	9.000
+vertex	120	10.000	10.000
+square	0	0	12	12	1
+square	1	1	13	13	2
+square	2	2	14	14	3
+square	3	3	15	15	4
+square	4	4	16	16	5
+square	5	5	17	17	6
+square	6	6	18	18	7
+square	7	7	19	19	8
+square	8	8	20	20	9
+square	9	9	21	21	10
+square	10	11	23	23	12
+square	11	12	24	24	13
+square	12	13	25	25	14
+square	13	14	26	26	15
+square	14	15	27	27	16
+square	15	16	28	28	17
+square	16	17	29	29	18
+square	17	18	30	30	19
+square	18	19	31	31	20
+square	19	20	32	32	21
+square	20	22	34	34	23
+square	21	23	35	35	24
+square	22	24	36	36	25
+square	23	25	37	37	26
+square	24	26	38	38	27
+square	25	27	39	39	28
+square	26	28	40	40	29
+square	27	29	41	41	30
+square	28	30	42	42	31
+square	29	31	43	43	32
+square	30	33	45	45	34
+square	31	34	46	46	35
+square	32	35	47	47	36
+square	33	36	48	48	37
+square	34	37	49	49	38
+square	35	38	50	50	39
+square	36	39	51	51	40
+square	37	40	52	52	41
+square	38	41	53	53	42
+square	39	42	54	54	43
+square	40	44	56	56	45
+square	41	45	57	57	46
+square	42	46	58	58	47
+square	43	47	59	59	48
+square	44	48	60	60	49
+square	45	49	61	61	50
+square	46	50	62	62	51
+square	47	51	63	63	52
+square	48	52	64	64	53
+square	49	53	65	65	54
+square	50	55	67	67	56
+square	51	56	68	68	57
+square	52	57	69	69	58
+square	53	58	70	70	59
+square	54	59	71	71	60
+square	55	60	72	72	61
+square	56	61	73	73	62
+square	57	62	74	74	63
+square	58	63	75	75	64
+square	59	64	76	76	65
+square	60	66	78	78	67
+square	61	67	79	79	68
+square	62	68	80	80	69
+square	63	69	81	81	70
+square	64	70	82	82	71
+square	65	71	83	83	72
+square	66	72	84	84	73
+square	67	73	85	85	74
+square	68	74	86	86	75
+square	69	75	87	87	76
+square	70	77	89	89	78
+square	71	78	90	90	79
+square	72	79	91	91	80
+square	73	80	92	92	81
+square	74	81	93	93	82
+square	75	82	94	94	83
+square	76	83	95	95	84
+square	77	84	96	96	85
+square	78	85	97	97	86
+square	79	86	98	98	87
+square	80	88	100	100	89
+square	81	89	101	101	90
+square	82	90	102	102	91
+square	83	91	103	103	92
+square	84	92	104	104	93
+square	85	93	105	105	94
+square	86	94	106	106	95
+square	87	95	107	107	96
+square	88	96	108	108	97
+square	89	97	109	109	98
+square	90	99	111	111	100
+square	91	100	112	112	101
+square	92	101	113	113	102
+square	93	102	114	114	103
+square	94	103	115	115	104
+square	95	104	116	116	105
+square	96	105	117	117	106
+square	97	106	118	118	107
+square	98	107	119	119	108
+square	99	108	120	120	109
+edge	3	0	1	0
+edge	0	0	11	1
+edge	6	1	2	1
+edge	2	1	12	1
+edge	9	2	3	1
+edge	5	2	13	0
+edge	12	3	4	1
+edge	8	3	14	0
+edge	15	4	5	1
+edge	11	4	15	0
+edge	18	5	6	1
+edge	14	5	16	0
+edge	21	6	7	1
+edge	17	6	17	0
+edge	24	7	8	1
+edge	20	7	18	0
+edge	27	8	9	1
+edge	23	8	19	0
+edge	30	9	10	1
+edge	26	9	20	0
+edge	29	10	21	1
+edge	1	11	12	0
+edge	31	11	22	1
+edge	4	12	13	1
+edge	33	12	23	1
+edge	7	13	14	1
+edge	35	13	24	0
+edge	10	14	15	0
+edge	37	14	25	1
+edge	13	15	16	1
+edge	39	15	26	1
+edge	16	16	17	0
+edge	41	16	27	0
+edge	19	17	18	1
+edge	43	17	28	1
+edge	22	18	19	1
+edge	45	18	29	0
+edge	25	19	20	1
+edge	47	19	30	0
+edge	28	20	21	0
+edge	49	20	31	1
+edge	51	21	32	1
+edge	32	22	23	0
+edge	52	22	33	1
+edge	34	23	24	0
+edge	54	23	34	0
+edge	36	24	25	0
+edge	56	24	35	1
+edge	38	25	26	0
+edge	58	25	36	0
+edge	40	26	27	0
+edge	60	26	37	1
+edge	42	27	28	1
+edge	62	27	38	1
+edge	44	28	29	0
+edge	64	28	39	0
+edge	46	29	30	0
+edge	66	29	40	1
+edge	48	30	31	1
+edge	68	30	41	0
+edge	50	31	32	0
+edge	70	31	42	0
+edge	72	32	43	1
+edge	53	33	34	1
+edge	73	33	44	1
+edge	55	34	35	1
+edge	75	34	45	0
+edge	57	35	36	1
+edge	77	35	46	0
+edge	59	36	37	1
+edge	79	36	47	0
+edge	61	37	38	0
+edge	81	37	48	0
+edge	63	38	39	0
+edge	83	38	49	1
+edge	65	39	40	1
+edge	85	39	50	0
+edge	67	40	41	1
+edge	87	40	51	0
+edge	69	41	42	1
+edge	89	41	52	0
+edge	71	42	43	1
+edge	91	42	53	0
+edge	93	43	54	1
+edge	74	44	45	0
+edge	94	44	55	1
+edge	76	45	46	0
+edge	96	45	56	1
+edge	78	46	47	1
+edge	98	46	57	0
+edge	80	47	48	1
+edge	100	47	58	1
+edge	82	48	49	1
+edge	102	48	59	0
+edge	84	49	50	1
+edge	104	49	60	1
+edge	86	50	51	1
+edge	106	50	61	0
+edge	88	51	52	1
+edge	108	51	62	1
+edge	90	52	53	1
+edge	110	52	63	1
+edge	92	53	54	0
+edge	112	53	64	1
+edge	114	54	65	1
+edge	95	55	56	0
+edge	115	55	66	1
+edge	97	56	57	1
+edge	117	56	67	0
+edge	99	57	58	0
+edge	119	57	68	1
+edge	101	58	59	0
+edge	121	58	69	0
+edge	103	59	60	1
+edge	123	59	70	1
+edge	105	60	61	0
+edge	125	60	71	0
+edge	107	61	62	0
+edge	127	61	72	1
+edge	109	62	63	0
+edge	129	62	73	0
+edge	111	63	64	0
+edge	131	63	74	1
+edge	113	64	65	0
+edge	133	64	75	0
+edge	135	65	76	1
+edge	116	66	67	1
+edge	136	66	77	1
+edge	118	67	68	0
+edge	138	67	78	0
+edge	120	68	69	1
+edge	140	68	79	1
+edge	122	69	70	0
+edge	142	69	80	1
+edge	124	70	71	0
+edge	144	70	81	0
+edge	126	71	72	1
+edge	146	71	82	1
+edge	128	72	73	0
+edge	148	72	83	1
+edge	130	73	74	1
+edge	150	73	84	0
+edge	132	74	75	1
+edge	152	74	85	1
+edge	134	75	76	1
+edge	154	75	86	0
+edge	156	76	87	1
+edge	137	77	78	0
+edge	157	77	88	1
+edge	139	78	79	0
+edge	159	78	89	1
+edge	141	79	80	0
+edge	161	79	90	0
+edge	143	80	81	1
+edge	163	80	91	0
+edge	145	81	82	1
+edge	165	81	92	0
+edge	147	82	83	0
+edge	167	82	93	1
+edge	149	83	84	1
+edge	169	83	94	0
+edge	151	84	85	0
+edge	171	84	95	1
+edge	153	85	86	1
+edge	173	85	96	0
+edge	155	86	87	0
+edge	175	86	97	0
+edge	177	87	98	1
+edge	158	88	89	0
+edge	178	88	99	1
+edge	160	89	90	1
+edge	180	89	100	0
+edge	162	90	91	1
+edge	182	90	101	1
+edge	164	91	92	0
+edge	184	91	102	0
+edge	166	92	93	1
+edge	186	92	103	1
+edge	168	93	94	1
+edge	188	93	104	0
+edge	170	94	95	0
+edge	190	94	105	0
+edge	172	95	96	1
+edge	192	95	106	1
+edge	174	96	97	0
+edge	194	96	107	1
+edge	176	97	98	1
+edge	196	97	108	0
+edge	198	98	109	1
+edge	179	99	100	1
+edge	199	99	110	1
+edge	181	100	101	0
+edge	201	100	111	0
+edge	183	101	102	0
+edge	203	101	112	1
+edge	185	102	103	1
+edge	205	102	113	0
+edge	187	103	104	0
+edge	207	103	114	0
+edge	189	104	105	1
+edge	209	104	115	0
+edge	191	105	106	1
+edge	211	105	116	0
+edge	193	106	107	0
+edge	213	106	117	1
+edge	195	107	108	1
+edge	215	107	118	0
+edge	197	108	109	0
+edge	217	108	119	0
+edge	219	109	120	1
+edge	200	110	111	1
+edge	202	111	112	1
+edge	204	112	113	1
+edge	206	113	114	1
+edge	208	114	115	1
+edge	210	115	116	1
+edge	212	116	117	1
+edge	214	117	118	1
+edge	216	118	119	1
+edge	218	119	120	0
