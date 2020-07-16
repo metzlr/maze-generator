@@ -10,20 +10,20 @@ bool isUnsignedInteger(const char * str) {
     return true;
 }
 
-//int main(int argc, char* argv[]) {
-int main() {
-    /*
-    int width = 10;
-    int height = 10;
+int main(int argc, char* argv[]) {
+    
+    int width = 4;
+    int height = 4;
+    int depth = 0;
     bool output_to_file = false;
-    bool output_data = false;
+    bool blocky = false;
     std::ofstream out_file;
     unsigned int maze_seed = (unsigned int)time(NULL);
     for (int i = 1; i < argc; i++) {
         if (std::string(argv[i]) == std::string("help")) {
-            std::cout << "\nArguments:\n\n-w [uint]   Width of maze\n-h [uint]   Height of maze\n-s [uint]   Maze seed\n--entrance_offset   Enables random offsets for entrances. Not recommended.\n" << std::endl;
+            std::cout << "\nArguments:\n\n-w [uint]\t\tWidth of maze\n-h [uint]\t\tHeight of maze\n-d [uint]\t\tDepth of maze\n-s [uint]\t\tMaze seed\n--2d\t\t2D maze\n--blocky\t\tBlocky edges (only for 2D mazes atm)\n" << std::endl;
             exit(EXIT_SUCCESS);
-        } else if (std::string(argv[i]) == std::string("-w")) {
+        } else if (std::string(argv[i]) == std::string("-width")) {
             i++;
             if (i == argc) {
                 std::cerr << "Error: No value following \"" << argv[i-1] << "\" argument" << std::endl;
@@ -35,7 +35,7 @@ int main() {
                 std::cerr << "Invalid value for \""<< argv[i-1] << "\"" << std::endl;
                 exit(EXIT_FAILURE);
             }
-        } else if (std::string(argv[i]) == std::string("-h")) {
+        } else if (std::string(argv[i]) == std::string("-height")) {
             i++;
             if (i == argc) {
                 std::cerr << "Error: No value following \""<< argv[i-1] << "\" argument" << std::endl;
@@ -43,6 +43,18 @@ int main() {
             }
             if (isUnsignedInteger(argv[i])) {
                 height = atoi(argv[i]);
+            } else {
+                std::cerr << "Invalid value for \""<< argv[i-1] << "\"" << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        } else if (std::string(argv[i]) == std::string("-depth")) {
+            i++;
+            if (i == argc) {
+                std::cerr << "Error: No value following \""<< argv[i-1] << "\" argument" << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            if (isUnsignedInteger(argv[i])) {
+                depth = atoi(argv[i]);
             } else {
                 std::cerr << "Invalid value for \""<< argv[i-1] << "\"" << std::endl;
                 exit(EXIT_FAILURE);
@@ -72,25 +84,24 @@ int main() {
             } else {
                 std::cerr << "Error opening output file" << std::endl;
             }
-        } else if (std::string(argv[i]) == std::string("-o")) {
-            output_data = true;
+        } else if (std::string(argv[i]) == std::string("--2d")) {
+            depth = 0;
+        } else if (std::string(argv[i]) == std::string("--blocky")) {
+            if (depth == 0) {
+                blocky = true;
+            }
         } else {
             std::cerr << "Unknown argument \"" << argv[i] << "\". Use \"help\" for list of valid arguments." << std::endl;
             exit(EXIT_FAILURE);
         }
     }
-    Maze m = Maze(width, height, maze_seed);
+    Maze m = Maze(width, height, depth, 0.0, maze_seed, blocky);
     if (output_to_file) {
-        m.output_to_stream(out_file);
+        m.outputToStream(out_file);
         out_file.close();
-    }
-    if (output_data) {
-        m.output_to_stream(std::cout);
     } else {
-        std::cout << m.getString() << std::endl;
+        m.outputToStream(std::cout);
     }
-    */
-    Maze m = Maze(3, 3, 0, 1.0);
-    m.output_to_stream(std::cout);
+    
     return 0;
 }

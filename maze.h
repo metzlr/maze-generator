@@ -10,32 +10,28 @@
 class Maze {
 public:
 
-    Maze(int w=10, int l=10, int h=0, double step=1.0, unsigned long seed_=(unsigned int)time(NULL));
+    Maze(int numCellsX_=10, int numCellsY_=10, int numCellsZ_=0, double surface_cutoff_=0.0, unsigned long seed_=(unsigned int)time(NULL), bool blocky_=false);
 
     unsigned int getSeed() const { return seed; }
     std::string getString() const;
     
 
-    int debug_simple_print() const;
-    void output_to_stream(std::ostream& file) const;
+    void outputToStream(std::ostream& file) const;
 
-    int getWidth() const { return width; }
-    int getLength() const { return length; }
-    int getHeight() const { return height; }
+    int getNumCellsX() const { return numCellsX; }
+    int getNumCellsY() const { return numCellsY; }
+    int getNumCellsZ() const { return numCellsZ; }
 
 private:
     struct Move {
-        //Move() : maze(nullptr) {}
-        //Move(Maze* m) : maze(m) {}
+        
         inline void addIndex(VertexIndex index, bool active) {
             if (active) potential_active.push_back(index);
             fill.push_back(index);
         }
-        //Vertex* selectMove();
         std::vector<VertexIndex> getFill() const { return fill; }
         std::vector<VertexIndex> getPotentialActive() const { return potential_active; }
     private:
-        //Maze* maze;
         std::vector<VertexIndex> fill;
         std::vector<VertexIndex> potential_active;
     };
@@ -48,9 +44,11 @@ private:
     std::queue<Vertex*> active_vertices;
 
     unsigned int seed;
-    int width;
-    int length;
-    int height;
+    int numCellsX;
+    int numCellsY;
+    int numCellsZ;
+    double surface_cutoff;
+
 };
 
 

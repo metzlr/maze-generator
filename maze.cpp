@@ -1,34 +1,26 @@
 #include "maze.h"
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 
-/*
-Vertex* Maze::Move::selectMove() {
-    for (int i = 0; i < fill.size(); i++) {
-        mesh->getVertex(fill[i])->unfill();
-    }
-
-}
-*/
 
 /* Maze constructor */
-Maze::Maze(int w, int l, int h, double step, unsigned long seed_) {
+Maze::Maze(int numCellsX_, int numCellsY_, int numCellsZ_, double surface_cutoff_, unsigned long seed_, bool blocky_) {
     seed = seed_;
     srand(seed);
-    width = w;
-    length = l;
-    height = h;
-    mesh = new Mesh(w * 2 + 1, l * 2 + 1, h * 2 + 1, step);
+    numCellsX = numCellsX_;
+    numCellsY = numCellsY_;
+    numCellsZ = numCellsZ_;
+    surface_cutoff = surface_cutoff_;
+    mesh = new Mesh(numCellsX * 2 + 1, numCellsY * 2 + 1, numCellsZ * 2 + 1);
 
     // Add Start/End Vertices
-    mesh->getVertex(VertexIndex(1,0,0))->unfill();
+    mesh->getVertex(VertexIndex(1,0,0))->setValue(1.0);
     Vertex* start = mesh->getVertex(VertexIndex(1,1,0));
-    start->unfill();
+    start->setValue(1.0);
     active_vertices.push(start);
-    Vertex* end = mesh->getVertex(VertexIndex(mesh->width()-2, mesh->length()-1, mesh->height()-1));
-    end->unfill();
-
-    //mesh->debugPrint();
+    Vertex* end = mesh->getVertex(VertexIndex(mesh->getNumVerticesX()-2, mesh->getNumVerticesY()-1, mesh->getNumVerticesZ()-1));
+    end->setValue(1.0);
 
     std::vector<int> initial_path_lengths = generatePathLengths(true);
     std::vector<int> path_lengths = generatePathLengths(false);
@@ -43,14 +35,14 @@ Maze::Maze(int w, int l, int h, double step, unsigned long seed_) {
         }
         if (not_done) path_count++;
     }
-
-    //mesh->debugPrint();
+    //mesh->outputVertices(std::cout);
+    mesh->triangulate(surface_cutoff, blocky_);
 }
 
 
 std::vector<int> Maze::generatePathLengths(bool initial) const {
     std::vector<int> sizes;
-    int area = width * length;
+    int area = numCellsX * numCellsY;
     if (initial) {
         for (int i = 0; i < 10; i++) {
             sizes.push_back(area*0.5);
@@ -109,7 +101,7 @@ std::vector<Maze::Move> Maze::getPossibleMovesSquare(Vertex* v) {
                 valid = false;
                 break;
             } 
-            if (!v->isFilled()) valid = false; // Make sure vertex hasn't been unfilled yet
+            if (v->getValue() > surface_cutoff) valid = false; // Make sure vertex hasn't been unfilled yet
         }
         if (valid) possible_moves.push_back(check_index[i]);
     }
@@ -143,7 +135,7 @@ bool Maze::generatePath(const std::vector<int>& sizes) {
         std::vector<VertexIndex> fill = selected_move.getFill();
         std::vector<VertexIndex> active = selected_move.getPotentialActive();
         for (size_t i = 0; i < fill.size(); i++) {
-            mesh->getVertex(fill[i])->unfill();
+            mesh->getVertex(fill[i])->setValue(1.0);
         }
         // Add active vertices from move
         size_t next_move_index = rand() % active.size(); // Pick one of the active vertices as the start for next move
@@ -162,50 +154,10 @@ bool Maze::generatePath(const std::vector<int>& sizes) {
     return true;
 }
 
-/*
-std::string Maze::getString() const {
-    std::ostringstream stream;
-    // Configuration
-    int block_width = 3;
-    char h_sym = '-';
-    char v_sym = '|';
-    char empty = ' ';
 
-    // First print top row
-    stream << h_sym;
-    for (int w = 0; w < mesh->width(); w++) {
-        Square* s = mesh->getSquare(w, 0);
-        char fill = (s->getEdge(Square::EdgePosition::up)->isVisible()) ? h_sym : empty;
-        stream << std::setfill(fill) << std::setw(block_width + 1) << h_sym;
-    }
-
-    // Then print middle and bottom for each node
-    stream << std::endl;
-    for (int h = 0; h < mesh->length(); h++) {
-        for (int w = 0; w < mesh->width(); w++) {
-            Square* s = mesh->getSquare(w, h);
-            if (w == 0) {
-                stream << ((s->getEdge(Square::EdgePosition::left)->isVisible()) ? v_sym : empty);
-            }
-            stream << std::setfill(empty) << std::setw(block_width+1) << ((s->getEdge(Square::EdgePosition::right)->isVisible()) ? v_sym : empty);
-        }
-        stream << std::endl;
-        stream << h_sym;
-        for (int w = 0; w < mesh->width(); w++) {
-            Square* s = mesh->getSquare(w, h);
-            char fill = (s->getEdge(Square::EdgePosition::down)->isVisible()) ? h_sym : empty;
-            stream << std::setfill(fill) << std::setw(block_width + 1) << h_sym;
-        }
-        stream << std::endl;
-    }
-    stream << std::endl;
-    return stream.str();
-}
-*/
-
-
-void Maze::output_to_stream(std::ostream& file) const {
+void Maze::outputToStream(std::ostream& file) const {
     file << "seed\t" << seed << std::endl;
-    mesh->output_to_stream(file);
+    mesh->outputTriangles(file);
+    //mesh->debugPrint2D(0);
 }
 
