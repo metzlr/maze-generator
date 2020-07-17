@@ -18,12 +18,15 @@ public:
     int getNumVerticesX() const { return numVerticesX; }
     int getNumVerticesY() const { return numVerticesY; }
     int getNumVerticesZ() const { return numVerticesZ; }
-    void addVertex(VertexIndex index);
+    // void addVertex(VertexIndex index);
     Vertex* getVertex(VertexIndex index) const;
 
     void triangulate(double surfaceValue, bool blocky);
+    void blend(double radius, double weight=0.5);
+    //void increaseResolution(int divides);
 
     void debugPrint2D(int z) const;
+    void debugPrintValues(int z) const;
     
     void outputVertices(std::ostream& file) const;
     void outputTriangles(std::ostream& file) const;
@@ -36,18 +39,21 @@ private:
     };
     
     int vertexArrayIndex(int x, int y, int z) const { return (x + y * numVerticesX + z * numVerticesX * numVerticesY); }
-    
-    Vertex* vertices;
+    std::vector<const Vertex*> getCell(VertexIndex index, bool cube) const;
+    //Vertex* vertices;
+    std::vector<Vertex*> vertices;
+
+    void recursiveBlend(VertexIndex index, VertexIndex center, double weight, double radius, std::vector<VertexIndex> &already_set);
     
     int numVerticesX;
     int numVerticesY;
     int numVerticesZ;
-    int vertex_id_count;
+    //int vertex_id_count;
 
     std::vector<Triangle> triangles;
 };
 
-Point avgVertexPosition(const Vertex* v1, const Vertex* v2);
+
 
 
 /* 0  4  1

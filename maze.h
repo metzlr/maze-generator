@@ -10,7 +10,7 @@
 class Maze {
 public:
 
-    Maze(int numCellsX_=10, int numCellsY_=10, int numCellsZ_=0, double surface_cutoff_=0.0, unsigned long seed_=(unsigned int)time(NULL), bool blocky_=false);
+    Maze(int numCellsX_=10, int numCellsY_=10, int numCellsZ_=1, double surface_cutoff_=0.0, bool flat=true, int detail_=1, double radius=0.0, unsigned long seed_=(unsigned int)time(NULL), bool blocky_=false);
 
     unsigned int getSeed() const { return seed; }
     std::string getString() const;
@@ -48,7 +48,8 @@ private:
     int numCellsY;
     int numCellsZ;
     double surface_cutoff;
-
+    int scale;
+    int boundary_size;
 };
 
 

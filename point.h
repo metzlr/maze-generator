@@ -1,6 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <cmath>
 
 struct Point {
     Point(double x_=-1.0, double y_=-1.0, double z_=-1.0) : x(x_), y(y_), z(z_) {}
@@ -14,6 +15,10 @@ struct VertexIndex {
     int x;
     int y;
     int z;
+    bool operator==(const VertexIndex& rhs) const { return (x == rhs.x && y == rhs.y && z == rhs.z); }
 };
+
+inline double avgValue(double v1, double v2) { return (v1+v2)/2; }
+inline bool lessThanOrEqual(double d1, double d2) { return (d1 < d2 || std::abs(d2 - d1) < 0.0001); }
 
 #endif

@@ -2,25 +2,41 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <cassert>
 
 
 /* Maze constructor */
-Maze::Maze(int numCellsX_, int numCellsY_, int numCellsZ_, double surface_cutoff_, unsigned long seed_, bool blocky_) {
+Maze::Maze(int numCellsX_, int numCellsY_, int numCellsZ_, double surface_cutoff_, bool flat, int detail_, double radius, unsigned long seed_, bool blocky_) {
     seed = seed_;
     srand(seed);
     numCellsX = numCellsX_;
     numCellsY = numCellsY_;
     numCellsZ = numCellsZ_;
     surface_cutoff = surface_cutoff_;
-    mesh = new Mesh(numCellsX * 2 + 1, numCellsY * 2 + 1, numCellsZ * 2 + 1);
-
+    if (detail_ < 1) detail_ = 1;
+    scale = std::pow(2, detail_);
+    int edge_width = (scale/2 == 1 ? 0 : scale/2);
+    boundary_size = scale/2 + edge_width/2;
+    if (flat) {
+        mesh = new Mesh(numCellsX * scale + 1 + edge_width, numCellsY * scale + 1 + edge_width, 1);
+    } else {
+        mesh = new Mesh(numCellsX * scale + 1 + edge_width, numCellsY * scale + 1 + edge_width, numCellsZ * scale + 1 + edge_width);
+    }
     // Add Start/End Vertices
-    mesh->getVertex(VertexIndex(1,0,0))->setValue(1.0);
-    Vertex* start = mesh->getVertex(VertexIndex(1,1,0));
-    start->setValue(1.0);
+    //mesh->getVertex(VertexIndex(edge_width-1 + scale/2,0,0))->setValue(1.0);
+    for (int i = 0; i < boundary_size + 1; i++) {
+        VertexIndex index = VertexIndex(boundary_size, i, 0);
+        mesh->getVertex(index)->setValue(1.0);
+    }
+    for (int i = 0; i < boundary_size; i++) {
+        VertexIndex index = VertexIndex(mesh->getNumVerticesX() - 1 - boundary_size, mesh->getNumVerticesY() - boundary_size + i, 0);
+        mesh->getVertex(index)->setValue(1.0);
+    }
+    Vertex* start = mesh->getVertex(VertexIndex(boundary_size, boundary_size, 0));
+    //start->setValue(1.0);
     active_vertices.push(start);
-    Vertex* end = mesh->getVertex(VertexIndex(mesh->getNumVerticesX()-2, mesh->getNumVerticesY()-1, mesh->getNumVerticesZ()-1));
-    end->setValue(1.0);
+    // Vertex* end = mesh->getVertex(VertexIndex(numCellsX * scale, numCellsY * scale, numCellsZ * scale));
+    // end->setValue(1.0);
 
     std::vector<int> initial_path_lengths = generatePathLengths(true);
     std::vector<int> path_lengths = generatePathLengths(false);
@@ -36,7 +52,15 @@ Maze::Maze(int numCellsX_, int numCellsY_, int numCellsZ_, double surface_cutoff
         if (not_done) path_count++;
     }
     //mesh->outputVertices(std::cout);
+    //double radius = (double)(detail_-2);
+    mesh->blend(radius, 0.5);
     mesh->triangulate(surface_cutoff, blocky_);
+    //std::cout << mesh->getNumVerticesX() << "  " << mesh->getNumVerticesY() << "  " << mesh->getNumVerticesZ() << std::endl;
+    // mesh->outputVertices(std::cout);
+    // mesh->debugPrintValues(0);
+    // mesh->debugPrint2D(0);
+
+    //mesh->increaseResolution(1);
 }
 
 
@@ -67,29 +91,23 @@ std::vector<Maze::Move> Maze::getPossibleMovesSquare(Vertex* v) {
     VertexIndex index = v->getIndex();
 
     Move check_index[6] ;
-    for (int i = 1; i < 3; i++) {
-        //check_index[0] = Move(this);
-        check_index[0].addIndex(VertexIndex(index.x, index.y - i, index.z), (i == 2 ? true : false));
+    for (int i = 1; i <= scale; i++) {
+        check_index[0].addIndex(VertexIndex(index.x, index.y - i, index.z), (i == scale ? true : false));
     }
-    for (int i = 1; i < 3; i++) {
-        //check_index[1] = Move(this);
-        check_index[1].addIndex(VertexIndex(index.x, index.y + i, index.z), (i == 2 ? true : false));
+    for (int i = 1; i <= scale; i++) {
+        check_index[1].addIndex(VertexIndex(index.x, index.y + i, index.z), (i == scale ? true : false));
     }
-    for (int i = 1; i < 3; i++) {
-        //check_index[2] = Move(this);
-        check_index[2].addIndex(VertexIndex(index.x - i, index.y, index.z), (i == 2 ? true : false));
+    for (int i = 1; i <= scale; i++) {
+        check_index[2].addIndex(VertexIndex(index.x - i, index.y, index.z), (i == scale ? true : false));
     }
-    for (int i = 1; i < 3; i++) {
-        //check_index[3] = Move(this);
-        check_index[3].addIndex(VertexIndex(index.x + i, index.y, index.z), (i == 2 ? true : false));
+    for (int i = 1; i <= scale; i++) {
+        check_index[3].addIndex(VertexIndex(index.x + i, index.y, index.z), (i == scale ? true : false));
     }
-    for (int i = 1; i < 3; i++) {
-        //check_index[4] = Move(this);
-        check_index[4].addIndex(VertexIndex(index.x, index.y, index.z - i), (i == 2 ? true : false));
+    for (int i = 1; i <= scale; i++) {
+        check_index[4].addIndex(VertexIndex(index.x, index.y, index.z - i), (i == scale ? true : false));
     }
-    for (int i = 1; i < 3; i++) {
-        //check_index[5] = Move(this);
-        check_index[5].addIndex(VertexIndex(index.x, index.y, index.z + i), (i == 2 ? true : false));
+    for (int i = 1; i <= scale; i++) {
+        check_index[5].addIndex(VertexIndex(index.x, index.y, index.z + i), (i == scale ? true : false));
     }
 
     for (int i = 0; i < 6; i++) {
@@ -100,7 +118,11 @@ std::vector<Maze::Move> Maze::getPossibleMovesSquare(Vertex* v) {
             if (v == nullptr) { // Vertex is out of bounds
                 valid = false;
                 break;
-            } 
+            } else if (v->getIndex().x < boundary_size || v->getIndex().x > mesh->getNumVerticesX() - 1 - boundary_size || v->getIndex().y < boundary_size || v->getIndex().y > mesh->getNumVerticesY() - 1 - boundary_size) {
+                // Vertex is on an edge
+                // PUT CHECK FOR Z VALUE OUT OF BOUNDS HERE
+                valid = false;
+            }
             if (v->getValue() > surface_cutoff) valid = false; // Make sure vertex hasn't been unfilled yet
         }
         if (valid) possible_moves.push_back(check_index[i]);
