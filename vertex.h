@@ -6,10 +6,11 @@
 
 class Vertex {
 public:
-    Vertex() : value(-1.0) {}
-    Vertex(VertexIndex index_, double value_) : index(index_), value(value_) {}
+    Vertex() : value(-1.0), id(-1) {}
+    Vertex(VertexIndex index_, double value_, int id_) : index(index_), value(value_), id(id_) {}
     //int getID() const { return id; }
     double getValue() const { return value; }
+    int getID() const { return id; }
     VertexIndex getIndex() const { return index; }
     void setIndex(VertexIndex index_) { index = index_; }
     //void setID(int id_) { id = id_; }
@@ -23,6 +24,7 @@ public:
 private:
     VertexIndex index;
     double value;
+    int id;
 };
 
 Point avgVertexPosition(const Vertex* v1, const Vertex* v2);

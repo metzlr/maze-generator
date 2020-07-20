@@ -17,7 +17,6 @@ int main(int argc, char* argv[]) {
     int depth = 0;
     int detail = 1;
     double radius = 0;
-    bool flat = false;
     bool output_to_file = false;
     bool no_output = false;
     bool blocky = false;
@@ -109,7 +108,6 @@ int main(int argc, char* argv[]) {
             }
         } else if (std::string(argv[i]) == std::string("--2d")) {
             depth = 0;
-            flat = true;
         } else if (std::string(argv[i]) == std::string("--blocky")) {
             if (depth == 0) {
                 blocky = true;
@@ -121,7 +119,7 @@ int main(int argc, char* argv[]) {
             exit(EXIT_FAILURE);
         }
     }
-    Maze m = Maze(width, height, depth, 0.0, flat, detail, radius, maze_seed, blocky);
+    Maze m = Maze(width, height, depth, 0.0, detail, radius, maze_seed, blocky);
     if (!no_output) {
         if (output_to_file) {
             m.outputToStream(out_file);
