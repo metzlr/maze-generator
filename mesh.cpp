@@ -5,20 +5,17 @@
 #include <vector>
 
 // Generate mesh frame
-Mesh::Mesh(int numVerticesX_, int numVerticesY_, int numVerticesZ_) {
-    numVerticesX = numVerticesX_;
-    numVerticesY = numVerticesY_;
-    numVerticesZ = numVerticesZ_;
-    //vertex_id_count = 0;
-    //vertices = new Vertex[numVerticesX*numVerticesY*numVerticesZ];
+Mesh::Mesh(int num_voxelsX_, int num_voxelsY_, int num_voxelsZ_) {
+    num_voxelsX = num_voxelsX_;
+    num_voxelsY = num_voxelsY_;
+    num_voxelsZ = num_voxelsZ_;
     int id_count = 0;
-    // Generate vertices
-    for (int z = 0; z < numVerticesZ; z++) {
-        for (int y = 0; y < numVerticesY; y++) {
-            for (int x = 0; x < numVerticesX; x++) {
-                vertices.push_back(new Vertex(VertexIndex(x, y, z), -1.0, id_count));
+    // Generate voxels
+    for (int z = 0; z < num_voxelsZ; z++) {
+        for (int y = 0; y < num_voxelsY; y++) {
+            for (int x = 0; x < num_voxelsX; x++) {
+                voxels.push_back(new Voxel(VoxelIndex(x, y, z), -1.0, id_count));
                 id_count++;
-                //addVertex(VertexIndex(x, y, z));
             }
         }
     }
@@ -26,27 +23,25 @@ Mesh::Mesh(int numVerticesX_, int numVerticesY_, int numVerticesZ_) {
 
 // Cleanup dynamic memory
 Mesh::~Mesh() {
-    for (size_t i = 0; i < vertices.size(); i++) {
-        delete vertices[i];
+    for (size_t i = 0; i < voxels.size(); i++) {
+        delete voxels[i];
+    }
+    for (triangle_vertex_map::iterator it = triangle_vertices.begin(); it != triangle_vertices.end(); it++) {
+        delete it->second;
     }
 }
 
-// void Mesh::addVertex(VertexIndex index) {
-//     vertices.push_back(new Vertex(index,  -1.0));
-//     vertex_id_count++;
-// }
-
-Vertex* Mesh::getVertex(VertexIndex index) const {
-    if (index.x >= numVerticesX || index.y >= numVerticesY || index.z >= numVerticesZ || index.x < 0 || index.y < 0 || index.z < 0) {
+Voxel* Mesh::getVoxel(VoxelIndex index) const {
+    if (index.x >= num_voxelsX || index.y >= num_voxelsY || index.z >= num_voxelsZ || index.x < 0 || index.y < 0 || index.z < 0) {
         /* std::cout << "ERROR: Trying to reach vertex that is out of bounds" << std::endl; */
         return nullptr;
     }
-    return vertices[vertexArrayIndex(index.x, index.y, index.z)];
+    return voxels[voxelArrayIndex(index.x, index.y, index.z)];
 }
 
-void Mesh::outputVertices(std::ostream& stream) const {
-    for (int i = 0; i < numVerticesX*numVerticesY*numVerticesZ; i++) {
-        Vertex* v = vertices[i];
+void Mesh::outputVoxels(std::ostream& stream) const {
+    for (int i = 0; i < num_voxelsX*num_voxelsY*num_voxelsZ; i++) {
+        Voxel* v = voxels[i];
         stream << v->getString() << std::endl;
     }
 }
@@ -68,7 +63,6 @@ void Mesh::outputTriangleVertices(std::ostream& stream, bool include_normals) co
 
 void Mesh::outputTriangles(std::ostream& stream) const {
     for (unsigned int i = 0; i < triangles.size(); i++) {
-        //stream << triangles[i].getString() << std::endl;
         stream << "triangle\t" << triangles[i].vertex_ids[0] << "\t"
         << triangles[i].vertex_ids[1] << "\t"
         << triangles[i].vertex_ids[2] << "\t";
@@ -76,22 +70,22 @@ void Mesh::outputTriangles(std::ostream& stream) const {
     }
 }
 
-std::vector<Vertex*> Mesh::getCell(VertexIndex index, bool cube) const {
-    std::vector<Vertex*> verts;
-    verts.push_back(getVertex(index));
-    verts.push_back(getVertex(VertexIndex(index.x + 1, index.y, index.z)));
-    verts.push_back(getVertex(VertexIndex(index.x + 1, index.y + 1, index.z)));
-    verts.push_back(getVertex(VertexIndex(index.x, index.y + 1, index.z)));
+std::vector<Voxel*> Mesh::getCell(VoxelIndex index, bool cube) const {
+    std::vector<Voxel*> voxels;
+    voxels.push_back(getVoxel(index));
+    voxels.push_back(getVoxel(VoxelIndex(index.x + 1, index.y, index.z)));
+    voxels.push_back(getVoxel(VoxelIndex(index.x + 1, index.y + 1, index.z)));
+    voxels.push_back(getVoxel(VoxelIndex(index.x, index.y + 1, index.z)));
     if (cube) {
-        verts.push_back(getVertex(VertexIndex(index.x, index.y, index.z + 1)));
-        verts.push_back(getVertex(VertexIndex(index.x + 1, index.y, index.z + 1)));
-        verts.push_back(getVertex(VertexIndex(index.x + 1, index.y + 1, index.z + 1)));
-        verts.push_back(getVertex(VertexIndex(index.x, index.y + 1, index.z + 1)));
+        voxels.push_back(getVoxel(VoxelIndex(index.x, index.y, index.z + 1)));
+        voxels.push_back(getVoxel(VoxelIndex(index.x + 1, index.y, index.z + 1)));
+        voxels.push_back(getVoxel(VoxelIndex(index.x + 1, index.y + 1, index.z + 1)));
+        voxels.push_back(getVoxel(VoxelIndex(index.x, index.y + 1, index.z + 1)));
     }
-    return verts;
+    return voxels;
 }
 
-Point vertexInterpolation(double surface_cutoff, const Vertex* v1, const Vertex* v2) {
+Point vertexInterpolation(double surface_cutoff, const Voxel* v1, const Voxel* v2) {
     if (std::abs(v1->getValue() - surface_cutoff) < 0.00001) {
         return Point(v1->getIndex().x, v1->getIndex().y, v1->getIndex().z);
     } else if (std::abs(v2->getValue() - surface_cutoff) < 0.00001) {
@@ -106,34 +100,45 @@ Point vertexInterpolation(double surface_cutoff, const Vertex* v1, const Vertex*
     return Point(x, y, z);
 }
 
-TriangleVertex* Mesh::addTriangleVertex(Vertex* v1, Vertex* v2, double surfaceValue, bool guaranteeNew, bool useMidpoint) {
-    if (!guaranteeNew) {    // Vertex is guaranteed to be unique
-        triangle_vertex_map::iterator it = triangle_vertices.find(std::pair<Vertex*,Vertex*>(v1, v2));
+TriangleVertex* Mesh::addTriangleVertex(Voxel* v1, Voxel* v2, double surfaceValue, bool guaranteeNew, bool useMidpoint) {
+    if (!guaranteeNew) {    // Vertex isnt guaranteed to be unique
+        triangle_vertex_map::iterator it = triangle_vertices.find(std::pair<Voxel*,Voxel*>(v1, v2));
         if (it != triangle_vertices.end()) {
             return it->second;
         }
     }
     Point p;
-    if (useMidpoint)        // Find average position between vertices instead of linear interpolation based on value
-        p = avgVertexPosition(v1, v2);
+    if (useMidpoint)        // Find average position between voxels instead of linear interpolation based on value
+        p = avgVoxelPosition(v1, v2);
     else 
         p = vertexInterpolation(surfaceValue, v1, v2);
-    TriangleVertex* vertex = new TriangleVertex(
-        p,
-        v1, v2,
-        Point(0.0, 0.0, 0.0),
-        triangle_vertices.size()
-    );
-    triangle_vertices[std::pair<Vertex*,Vertex*>(v1,v2)] = vertex;
+    TriangleVertex* vertex;
+    if (v1->getID() < v2->getID()) {        // Make sure smaller voxel id is first
+        vertex = new TriangleVertex(
+            p,
+            v1, v2,
+            Point(0.0, 0.0, 0.0),
+            triangle_vertices.size()
+        );
+    } else {
+        vertex = new TriangleVertex(
+            p,
+            v2, v1,
+            Point(0.0, 0.0, 0.0),
+            triangle_vertices.size()
+        );
+    }
+    
+    triangle_vertices[std::pair<Voxel*,Voxel*>(v1,v2)] = vertex;
     return vertex;
 }
 
 void Mesh::triangulate2D(double surfaceValue, bool blocky) {
     triangles.clear();
     triangle_vertices.clear();
-    for (int y = 0; y < numVerticesY-1; y++) {
-        for (int x = 0; x < numVerticesX-1; x++) {
-            std::vector<Vertex*> corners = getCell(VertexIndex(x, y, 0), false);
+    for (int y = 0; y < num_voxelsY-1; y++) {
+        for (int x = 0; x < num_voxelsX-1; x++) {
+            std::vector<Voxel*> corners = getCell(VoxelIndex(x, y, 0), false);
             // Get triangle index from active points
             int triangleIndex = 0;
             if (corners[0]->getValue() < surfaceValue) triangleIndex |= 1;
@@ -142,9 +147,8 @@ void Mesh::triangulate2D(double surfaceValue, bool blocky) {
             if (corners[3]->getValue() < surfaceValue) triangleIndex |= 8;
             if (triangleIndex == 0) continue; // No active corners
 
-            // Get vertices from list and create list of triangle vertices
+            // Get voxels from list and create list of triangle voxels
             std::vector<TriangleVertex*> verts;
-            //std::vector<Point> points;
             const std::array<std::array<int, 8>, 16> * triangleArray;
             if (blocky)
                 triangleArray = &TRIANGLES_2D_BLOCKY;
@@ -152,28 +156,23 @@ void Mesh::triangulate2D(double surfaceValue, bool blocky) {
                 triangleArray = &TRIANGLES_2D_ROUNDED;
 
             for (int i = 0; (*triangleArray)[triangleIndex][i] != -1; i++) {
-                int vertexIndex = (*triangleArray)[triangleIndex][i];
+                int VoxelIndex = (*triangleArray)[triangleIndex][i];
                 TriangleVertex* v;
                 // Point p;
-                if (vertexIndex < 4) {
-                    //p = Point(corners[vertexIndex]->getIndex().x, corners[vertexIndex]->getIndex().y);
-                    v = addTriangleVertex(corners[vertexIndex], corners[vertexIndex], surfaceValue);
-                } else if (vertexIndex == 4) {
-                    //p = vertexInterpolation(surfaceValue, corners[0], corners[1]);
+                if (VoxelIndex < 4) {
+                    v = addTriangleVertex(corners[VoxelIndex], corners[VoxelIndex], surfaceValue);
+                } else if (VoxelIndex == 4) {
                     v = addTriangleVertex(corners[0], corners[1], surfaceValue);
-                } else if (vertexIndex == 5) {
-                    //p = vertexInterpolation(surfaceValue, corners[1], corners[2]);
+                } else if (VoxelIndex == 5) {
                     v = addTriangleVertex(corners[1], corners[2], surfaceValue);
-                } else if (vertexIndex == 6) {
-                    //p = vertexInterpolation(surfaceValue, corners[2], corners[3]);
+                } else if (VoxelIndex == 6) {
                     v = addTriangleVertex(corners[2], corners[3], surfaceValue);
-                } else if (vertexIndex == 7) {
-                    //p = vertexInterpolation(surfaceValue, corners[3], corners[0]);
+                } else if (VoxelIndex == 7) {
                     v = addTriangleVertex(corners[3], corners[0], surfaceValue);
-                } else if (vertexIndex == 8 && blocky) {
+                } else if (VoxelIndex == 8 && blocky) {
                     v = addTriangleVertex(corners[0], corners[2], surfaceValue, true, true);
                 } else {
-                    std::cerr << "Error: Unknown vertex index " << vertexIndex << std::endl;
+                    std::cerr << "Error: Unknown vertex index " << VoxelIndex << std::endl;
                     return;
                 }
                 verts.push_back(v);
@@ -197,7 +196,7 @@ void Mesh::triangulate2D(double surfaceValue, bool blocky) {
 }
 
 Point normalize(Point v) {
-    double mag = std::sqrt(std::pow(v.x, 2) + std::pow(v.y, 2) + std::pow(v.z, 2));
+    double mag = std::sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
     return Point(v.x/mag, v.y/mag, v.z/mag);
 }
 
@@ -211,17 +210,18 @@ Point getSurfaceNormal(Point a, Point b, Point c) {
         v1[2]*v2[0] - v1[0]*v2[2],
         v1[0]*v2[1] - v1[1]*v2[0]
     );
+    //std::cout << p.x << " " << p.y << " " << p.z << std::endl;
     return p;
 }
 
 void Mesh::triangulate3D(double surfaceValue) {
     triangles.clear();
     triangle_vertices.clear();
-    for (int z = 0; z < numVerticesZ-1; z++) {
-        for (int y = 0; y < numVerticesY-1; y++) {
-            for (int x = 0; x < numVerticesX-1; x++) {
+    for (int z = 0; z < num_voxelsZ-1; z++) {
+        for (int y = 0; y < num_voxelsY-1; y++) {
+            for (int x = 0; x < num_voxelsX-1; x++) {
                 // Corner vertices
-                std::vector<Vertex*> corners = getCell(VertexIndex(x, y, z), true);
+                std::vector<Voxel*> corners = getCell(VoxelIndex(x, y, z), true);
                 int cubeIndex = 0;
                 if (corners[0]->getValue() < surfaceValue) cubeIndex |= 1;
                 if (corners[1]->getValue() < surfaceValue) cubeIndex |= 2;
@@ -297,128 +297,80 @@ void Mesh::triangulate3D(double surfaceValue) {
     }
 }
 
-void Mesh::recursiveBlend(VertexIndex index, VertexIndex center, double weight, double radius, std::vector<VertexIndex> &already_set) {
-    if (index.x >= numVerticesX || index.y >= numVerticesY || index.z >= numVerticesZ || index.x < 0 || index.y < 0 || index.z < 0) return;
+void Mesh::recursiveBlend(VoxelIndex index, VoxelIndex center, double weight, double radius, std::vector<VoxelIndex> &already_set) {
+    if (index.x >= num_voxelsX || index.y >= num_voxelsY || index.z >= num_voxelsZ || index.x < 0 || index.y < 0 || index.z < 0) return;
     for (size_t i = 0; i < already_set.size(); i++) {
         if (already_set[i] == index) return;
     }
-    //if (getVertex(index)->getValue() != -1.0 && !initial) return;
+    //if (getVoxel(index)->getValue() != -1.0 && !initial) return;
     double distance = indexDistance(index, center);
     
     if (distance != 0.0) {
         if (lessThanOrEqual(distance, radius)) {
             already_set.push_back(index);
             double value = weight/distance;
-            if (getVertex(index)->getValue() < value) { getVertex(index)->setValue(value); }
+            if (getVoxel(index)->getValue() < value) { getVoxel(index)->setValue(value); }
         } else { return; }
     }
-    recursiveBlend(VertexIndex(index.x, index.y + 1, index.z), center, weight, radius, already_set);
-    recursiveBlend(VertexIndex(index.x, index.y - 1, index.z), center, weight, radius, already_set);
-    recursiveBlend(VertexIndex(index.x + 1, index.y, index.z), center, weight, radius, already_set);
-    recursiveBlend(VertexIndex(index.x - 1, index.y, index.z), center, weight, radius, already_set);
-    recursiveBlend(VertexIndex(index.x, index.y, index.z + 1), center, weight, radius, already_set);
-    recursiveBlend(VertexIndex(index.x, index.y, index.z - 1), center, weight, radius, already_set);
+    recursiveBlend(VoxelIndex(index.x, index.y + 1, index.z), center, weight, radius, already_set);
+    recursiveBlend(VoxelIndex(index.x, index.y - 1, index.z), center, weight, radius, already_set);
+    recursiveBlend(VoxelIndex(index.x + 1, index.y, index.z), center, weight, radius, already_set);
+    recursiveBlend(VoxelIndex(index.x - 1, index.y, index.z), center, weight, radius, already_set);
+
+    // Blend vertically as well
+    // recursiveBlend(VoxelIndex(index.x, index.y, index.z + 1), center, weight, radius, already_set);
+    // recursiveBlend(VoxelIndex(index.x, index.y, index.z - 1), center, weight, radius, already_set);
 }
 
-void Mesh::blend(double radius, double weight) {
+void Mesh::blend(double radius, int z, double weight) {
     if (radius <= 0) return;
-    for (int z = 0; z < numVerticesZ; z++) {
-        for (int y = 0; y < numVerticesY; y++) {
-            for (int x = 0; x < numVerticesX; x++) {
-                VertexIndex index = VertexIndex(x, y, z);
-                Vertex* v = getVertex(index);
-                if (v->getValue() < 1.0) continue;
-                std::vector<VertexIndex> already_set;
-                recursiveBlend(index, index, weight, radius, already_set);
-                already_set.empty();
-            }
+    for (int y = 0; y < num_voxelsY; y++) {
+        for (int x = 0; x < num_voxelsX; x++) {
+            VoxelIndex index = VoxelIndex(x, y, z);
+            Voxel* v = getVoxel(index);
+            if (v->getValue() < 1.0) continue;
+            std::vector<VoxelIndex> already_set;
+            recursiveBlend(index, index, weight, radius, already_set);
+            already_set.empty();
         }
     }
 }
 
-void Mesh::depthFill(int floorSize) {
-    for (size_t i = 0; i < vertices.size(); i++) {
-        Vertex* v = vertices[i];
-        if (v->getValue() != -1.0) {
-            for (int z = floorSize; z < numVerticesZ-1; z++) {
-                VertexIndex index = v->getIndex();
-                index.z = z;
-                getVertex(index)->setValue(v->getValue());
-            }
-        }
-    }
-    for (int y = 0; y < numVerticesY; y++) {
-        for (int x = 0; x < numVerticesX; x++) {
-            getVertex(VertexIndex(x, y, numVerticesZ-1))->setValue(1.0);
-        }   
-    }
-}
-
-
-
-
-
-
-/* 
-void recursive_split(Vertex v1, Vertex v2, int num_divides, std::vector<Vertex>& vertices, int direction, bool initial=true) {
-    if (initial) vertices.push_back(v1);
-    if (num_divides > 0) {
-        //Point midPos = avgVertexPosition(&v1, &v2);
-        VertexIndex midIndex = v1.getIndex();
-        //midIndex.x += 1;
-        Vertex midVertex(midIndex, avgValue(v1.getValue(), v2.getValue()));
-        recursive_split(v1, midVertex, num_divides-1, vertices, false);
-        recursive_split(midVertex, v2, num_divides-1, vertices, false);
-    } else {
-        VertexIndex index;
-        if (direction == 0) {           // X split
-            index = VertexIndex(vertices[0].getIndex().x + vertices.size(), v2.getIndex().y, v2.getIndex().z);
-        } else if (direction == 1) {    // Y split
-            index = VertexIndex(v2.getIndex().x, vertices[0].getIndex().y + vertices.size(), v2.getIndex().z);
-        } else {                        // Z split
-            index = VertexIndex(v2.getIndex().x, v2.getIndex().y, vertices[0].getIndex().z + vertices.size());
-        }
-        v2.setIndex(index);
-        vertices.push_back(v2);
-    }
-}
-
-
-void Mesh::increaseResolution(int divides) {
-    int factor = 2^divides;
-    //int newZ = 1;
-    //if (numVerticesZ > 1) { newZ = numVerticesZ * factor - 1; }
-    //int newX = numVerticesX * factor - 1;
-    //int newY = numVerticesZ * factor - 1;
-    //Vertex* new_vertices = new Vertex[newZ * newY * newX];
-    std::vector<Vertex> new_vertices;
-    std::vector<Vertex> block;
-    //int vertex_count = 0;
-    for (int z = 0; z < (numVerticesZ == 1 ? 1 : numVerticesZ - 1); z++) {
-        for (int y = 0; y < numVerticesY - 1; y++) {
-            for (int x = 0; x < numVerticesX - 1; x++) {
-                std::vector<const Vertex*> cell_vertices = getCell(VertexIndex(x,y,x), false);
-                block.clear();
-                recursive_split(*cell_vertices[0], *cell_vertices[1], 1, block, 0);
-                for (unsigned i = 0; i < block.size(); i++) {
-                    //block[i].setID(vertex_count);
-                    new_vertices.push_back(block[i]);
-                    //new_vertices[vertex_count] = block[i];
-                    //std::cout << new_vertices[vertex_count].getString() << std::endl;
-                    //vertex_count++;
+void Mesh::depthFill(int floor_size) {
+    // Extend empty voxels upwards
+    for (int y = 0; y < num_voxelsY; y++) {
+        for (int x = 0; x < num_voxelsX; x++) {
+            Voxel* v = getVoxel(VoxelIndex(x, y, floor_size));
+            if (v->getValue() != -1.0) {
+                for (int z = floor_size; z < num_voxelsZ-1; z++) {
+                    VoxelIndex index = v->getIndex();
+                    index.z = z;
+                    getVoxel(index)->setValue(v->getValue());
                 }
             }
         }
     }
-    for (int i = 0; i < new_vertices.size(); i++) {
-        std::cout << new_vertices[i].getString() << std::endl;
+    // for (size_t i = 0; i < voxels.size(); i++) {
+    //     Voxel* v = voxels[i];
+    //     if (v->getValue() != -1.0) {
+    //         for (int z = floor_size; z < num_voxelsZ-1; z++) {
+    //             VoxelIndex index = v->getIndex();
+    //             index.z = z;
+    //             getVoxel(index)->setValue(v->getValue());
+    //         }
+    //     }
+    // }
+    for (int y = 0; y < num_voxelsY; y++) {
+        for (int x = 0; x < num_voxelsX; x++) {
+            getVoxel(VoxelIndex(x, y, num_voxelsZ-1))->setValue(1.0);
+        }   
     }
-} */
+}
 
 void Mesh::debugPrint2D(int z) const {
-    for (int y = 0; y < numVerticesY; y++) {
-        for (int x = 0; x < numVerticesX; x++) {
-            Vertex* v = getVertex(VertexIndex(x, y, z));
+    for (int y = 0; y < num_voxelsY; y++) {
+        for (int x = 0; x < num_voxelsX; x++) {
+            Voxel* v = getVoxel(VoxelIndex(x, y, z));
             char fill = ' ';
             if (v->getValue() < 0.0) fill = '+';
             std::cout << fill << " ";
@@ -428,10 +380,31 @@ void Mesh::debugPrint2D(int z) const {
     std::cout << std::endl;
 }
 
+void Mesh::debugPrintSolution2D(int z, const std::vector<Voxel*>& sol) const {
+    for (int y = 0; y < num_voxelsY; y++) {
+        for (int x = 0; x < num_voxelsX; x++) {
+            Voxel* v = getVoxel(VoxelIndex(x, y, z));
+            char fill = ' ';
+            bool onSolutionPath = false;
+            for (uint i = 0; i < sol.size(); i++) {
+                if (v->getID() == sol[i]->getID()) {
+                    onSolutionPath = true;
+                    break;
+                }
+            }
+            if (onSolutionPath) fill = '*';
+            else if (v->getValue() < 0.0) fill = '+';
+            std::cout << fill << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
 void Mesh::debugPrintValues(int z) const {
-    for (int y = 0; y < numVerticesY; y++) {
-        for (int x = 0; x < numVerticesX; x++) {
-            Vertex* v = getVertex(VertexIndex(x, y, z));
+    for (int y = 0; y < num_voxelsY; y++) {
+        for (int x = 0; x < num_voxelsX; x++) {
+            Voxel* v = getVoxel(VoxelIndex(x, y, z));
             std::cout << std::setw(3) << v->getValue();
         }
         std::cout << std::endl;

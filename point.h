@@ -10,12 +10,12 @@ struct Point {
     double z;
 };
 
-struct VertexIndex {
-    VertexIndex(int x_=-1, int y_=-1, int z_=-1) : x(x_), y(y_), z(z_) {}
+struct VoxelIndex {
+    VoxelIndex(int x_=-1, int y_=-1, int z_=-1) : x(x_), y(y_), z(z_) {}
     int x;
     int y;
     int z;
-    bool operator==(const VertexIndex& rhs) const { return (x == rhs.x && y == rhs.y && z == rhs.z); }
+    bool operator==(const VoxelIndex& rhs) const { return (x == rhs.x && y == rhs.y && z == rhs.z); }
 };
 
 inline double avgValue(double v1, double v2) { return (v1+v2)/2; }

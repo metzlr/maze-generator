@@ -11,20 +11,31 @@ bool isUnsignedInteger(const char * str) {
 }
 
 int main(int argc, char* argv[]) {
-    
     int width = 4;
     int height = 4;
     int depth = 0;
     int detail = 1;
     double radius = 0;
+    int edge_width = -1;
     bool output_to_file = false;
     bool no_output = false;
+    bool get_solution = false;
     bool blocky = false;
     std::ofstream out_file;
     unsigned int maze_seed = (unsigned int)time(NULL);
     for (int i = 1; i < argc; i++) {
         if (std::string(argv[i]) == std::string("help")) {
-            std::cout << "\nArguments:\n\n-w [uint]\t\tWidth of maze\n-h [uint]\t\tHeight of maze\n-d [uint]\t\tDepth of maze\n-s [uint]\t\tMaze seed\n-detail [uint]\t\tSet maze resolution\n--2d\t\t2D maze\n--blocky\t\tBlocky edges (only for 2D mazes atm)\n--no_output\t\tDisables any output\n" << std::endl;
+            std::cout << "\nArguments:\n\n" << 
+                        "-w [uint]\t\tWidth of maze\n" <<
+                        "-h [uint]\t\tHeight of maze\n" <<
+                        "-d [uint]\t\tDepth of maze\n" <<
+                        "-s [uint]\t\tMaze seed\n" <<
+                        "-detail [uint]\t\tSet maze resolution\n" <<
+                        "--2d\t\t\t2D maze\n" << 
+                        "--solution\t\tGenerates and outputs maze solution\n" <<
+                        "--blocky\t\tBlocky corners (Only for 2D mazes atm. Also only works with radius=0)\n" <<
+                        "--no_output\t\tDisables any output\n" <<
+            std::endl;
             exit(EXIT_SUCCESS);
         } else if (std::string(argv[i]) == std::string("-width")) {
             i++;
@@ -114,12 +125,14 @@ int main(int argc, char* argv[]) {
             }
         } else if (std::string(argv[i]) == std::string("--no_output")) {
             no_output = true;
+        } else if (std::string(argv[i]) == std::string("--solution")) {
+            get_solution = true;
         } else {
             std::cerr << "Unknown argument \"" << argv[i] << "\". Use \"help\" for list of valid arguments." << std::endl;
             exit(EXIT_FAILURE);
         }
     }
-    Maze m = Maze(width, height, depth, 0.0, detail, radius, maze_seed, blocky);
+    Maze m = Maze(width, height, depth, 0.0, detail, radius, edge_width, maze_seed, blocky, get_solution);
     if (!no_output) {
         if (output_to_file) {
             m.outputToStream(out_file);

@@ -10,43 +10,46 @@
 class Maze {
 public:
 
-    Maze(int numCellsX_=10, int numCellsY_=10, int numCellsZ_=1, double surface_cutoff_=0.0, int detail_=1, double radius=0.0, unsigned long seed_=(unsigned int)time(NULL), bool blocky_=false);
-
+    Maze(int num_cellsX_=10, int num_cellsY_=10, int num_cellsZ_=1, double surface_cutoff_=0.0, int detail_=1, double path_radius=0.0, int edge_width=-1, unsigned long seed_=(unsigned int)time(NULL), bool blocky_=false, bool find_solution=false);
+    ~Maze();
+    
     unsigned int getSeed() const { return seed; }
     std::string getString() const;
     
 
     void outputToStream(std::ostream& stream) const;
 
-    int getNumCellsX() const { return numCellsX; }
-    int getNumCellsY() const { return numCellsY; }
-    int getNumCellsZ() const { return numCellsZ; }
+    int getNumCellsX() const { return num_cellsX; }
+    int getNumCellsY() const { return num_cellsY; }
+    int getNumCellsZ() const { return num_cellsZ; }
 
 private:
     struct Move {
         
-        inline void addIndex(VertexIndex index, bool active) {
+        inline void addIndex(VoxelIndex index, bool active) {
             if (active) potential_active.push_back(index);
             fill.push_back(index);
         }
-        std::vector<VertexIndex> getFill() const { return fill; }
-        std::vector<VertexIndex> getPotentialActive() const { return potential_active; }
+        std::vector<VoxelIndex> getFill() const { return fill; }
+        std::vector<VoxelIndex> getPotentialActive() const { return potential_active; }
     private:
-        std::vector<VertexIndex> fill;
-        std::vector<VertexIndex> potential_active;
+        std::vector<VoxelIndex> fill;
+        std::vector<VoxelIndex> potential_active;
     };
 
-    std::vector<Move> getPossibleMovesSquare(Vertex* v);
+    std::vector<Move> getPossibleMovesSquare(Voxel* v);
     bool generatePath(const std::vector<int>& sizes);
     std::vector<int> generatePathLengths(bool initial) const;
+    std::vector<Voxel*> findSolution(Voxel* start, Voxel* end) const;
 
     Mesh* mesh;
-    std::queue<Vertex*> active_vertices;
+    std::queue<Voxel*> active_vertices;
+    std::vector<Voxel*> solution;
 
     unsigned int seed;
-    int numCellsX;
-    int numCellsY;
-    int numCellsZ;
+    int num_cellsX;
+    int num_cellsY;
+    int num_cellsZ;
     double surface_cutoff;
     int scale;
     int boundary_size;

@@ -5,32 +5,31 @@
 #include <fstream>
 #include <vector>
 #include <array>
-#include "vertex.h"
+#include "voxel.h"
 #include "triangle_vertex.h"
 
-typedef std::map<std::pair<Vertex*, Vertex*>, TriangleVertex*, VertexPairByID> triangle_vertex_map;
+typedef std::map<std::pair<Voxel*, Voxel*>, TriangleVertex*, VoxelPairByID> triangle_vertex_map;
 
 class Mesh {
 public:
-    Mesh(int numVerticesX_, int numVerticesY_, int numVerticesZ_);
+    Mesh(int num_voxelsX_, int num_voxelsY_, int num_voxelsZ_);
     ~Mesh();
 
-    int getNumVerticesX() const { return numVerticesX; }
-    int getNumVerticesY() const { return numVerticesY; }
-    int getNumVerticesZ() const { return numVerticesZ; }
-    // void addVertex(VertexIndex index);
-    Vertex* getVertex(VertexIndex index) const;
+    int getNumVoxelsX() const { return num_voxelsX; }
+    int getNumVoxelsY() const { return num_voxelsY; }
+    int getNumVoxelsZ() const { return num_voxelsZ; }
+    Voxel* getVoxel(VoxelIndex index) const;
 
     void triangulate2D(double surfaceValue, bool blocky);
     void triangulate3D(double surfaceValue);
-    void blend(double radius, double weight=0.5);
+    void blend(double radius, int z, double weight=0.5);
     void depthFill(int floorSize);
-    //void increaseResolution(int divides);
 
     void debugPrint2D(int z) const;
+    void debugPrintSolution2D(int z, const std::vector<Voxel*>& sol) const;
     void debugPrintValues(int z) const;
     
-    void outputVertices(std::ostream& stream) const;
+    void outputVoxels(std::ostream& stream) const;
     void outputTriangles(std::ostream& stream) const;
     void outputTriangleVertices(std::ostream& stream, bool include_normals) const;
 
@@ -38,30 +37,19 @@ private:
     struct Triangle {
         Triangle(int v1, int v2, int v3) : vertex_ids{ v1, v2, v3 } {}
         int vertex_ids[3];
-        // std::string getString() const { 
-        //     return std::to_string(p[0].x) + "\t" + 
-        //     std::to_string(p[0].y) + "\t" +
-        //     std::to_string(p[0].z) + "\t" +
-        //     std::to_string(p[1].x) + "\t" +
-        //     std::to_string(p[1].y) + "\t" + 
-        //     std::to_string(p[1].z) + "\t" +
-        //     std::to_string(p[2].x) + "\t" + 
-        //     std::to_string(p[2].y) + "\t" +
-        //     std::to_string(p[2].z);
-        // }
     };
     
-    int vertexArrayIndex(int x, int y, int z) const { return (x + y * numVerticesX + z * numVerticesX * numVerticesY); }
-    std::vector<Vertex*> getCell(VertexIndex index, bool cube) const;
-    TriangleVertex* addTriangleVertex(Vertex* v1, Vertex* v2, double surfaceValue, bool guaranteeNew=false, bool useMidpoint=false);
-    void recursiveBlend(VertexIndex index, VertexIndex center, double weight, double radius, std::vector<VertexIndex> &already_set);
+    int voxelArrayIndex(int x, int y, int z) const { return (x + y * num_voxelsX + z * num_voxelsY * num_voxelsX); }
+    std::vector<Voxel*> getCell(VoxelIndex index, bool cube) const;
+    TriangleVertex* addTriangleVertex(Voxel* v1, Voxel* v2, double surfaceValue, bool guaranteeNew=false, bool useMidpoint=false);
+    void recursiveBlend(VoxelIndex index, VoxelIndex center, double weight, double radius, std::vector<VoxelIndex> &already_set);
     
-    int numVerticesX;
-    int numVerticesY;
-    int numVerticesZ;
+    int num_voxelsX;
+    int num_voxelsY;
+    int num_voxelsZ;
     //int vertex_id_count;
 
-    std::vector<Vertex*> vertices;
+    std::vector<Voxel*> voxels;
     std::vector<Triangle> triangles;
     triangle_vertex_map triangle_vertices;
 };
