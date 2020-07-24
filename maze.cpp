@@ -20,8 +20,7 @@ Maze::Maze(int num_cellsX_, int num_cellsY_, int num_cellsZ_, double surface_cut
         flat = false;
     if (detail_ < 1) detail_ = 1;
     scale = std::pow(2, detail_);
-    if (edge_width_ < 0)
-        edge_width_ = (scale/2 == 1 ? 0 : scale/2);
+    if (edge_width_ < 0) edge_width_ = (scale/2 == 1 ? 1 : scale/2);
     boundary_size = scale/2 + edge_width_;
     // Generate mesh
     if (flat) {     // 2D mesh
@@ -68,6 +67,7 @@ Maze::Maze(int num_cellsX_, int num_cellsY_, int num_cellsZ_, double surface_cut
     }
     // Edit finished maze
     mesh->blend(path_radius, zBoundary, 0.5);   // Blend paths
+    mesh->cutoff(flat);  // Empty outermost voxels on all sides
     // Create triangles
     if (flat) {
         mesh->triangulate2D(surface_cutoff, blocky_);  

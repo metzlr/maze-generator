@@ -33,7 +33,6 @@ Mesh::~Mesh() {
 
 Voxel* Mesh::getVoxel(VoxelIndex index) const {
     if (index.x >= num_voxelsX || index.y >= num_voxelsY || index.z >= num_voxelsZ || index.x < 0 || index.y < 0 || index.z < 0) {
-        /* std::cout << "ERROR: Trying to reach vertex that is out of bounds" << std::endl; */
         return nullptr;
     }
     return voxels[voxelArrayIndex(index.x, index.y, index.z)];
@@ -101,8 +100,14 @@ Point vertexInterpolation(double surface_cutoff, const Voxel* v1, const Voxel* v
 }
 
 TriangleVertex* Mesh::addTriangleVertex(Voxel* v1, Voxel* v2, double surfaceValue, bool guaranteeNew, bool useMidpoint) {
+    std::pair<Voxel*,Voxel*> voxel_pair;
+    if (v1->getID() < v2->getID()) {        // Make sure smaller voxel id is first
+        voxel_pair = std::pair<Voxel*,Voxel*>(v1, v2);
+    } else {
+        voxel_pair = std::pair<Voxel*,Voxel*>(v2, v1);
+    }
     if (!guaranteeNew) {    // Vertex isnt guaranteed to be unique
-        triangle_vertex_map::iterator it = triangle_vertices.find(std::pair<Voxel*,Voxel*>(v1, v2));
+        triangle_vertex_map::iterator it = triangle_vertices.find(voxel_pair);
         if (it != triangle_vertices.end()) {
             return it->second;
         }
@@ -113,23 +118,9 @@ TriangleVertex* Mesh::addTriangleVertex(Voxel* v1, Voxel* v2, double surfaceValu
     else 
         p = vertexInterpolation(surfaceValue, v1, v2);
     TriangleVertex* vertex;
-    if (v1->getID() < v2->getID()) {        // Make sure smaller voxel id is first
-        vertex = new TriangleVertex(
-            p,
-            v1, v2,
-            Point(0.0, 0.0, 0.0),
-            triangle_vertices.size()
-        );
-    } else {
-        vertex = new TriangleVertex(
-            p,
-            v2, v1,
-            Point(0.0, 0.0, 0.0),
-            triangle_vertices.size()
-        );
-    }
+    vertex = new TriangleVertex(p, voxel_pair.first, voxel_pair.second,Point(0.0, 0.0, 0.0),triangle_vertices.size());
     
-    triangle_vertices[std::pair<Voxel*,Voxel*>(v1,v2)] = vertex;
+    triangle_vertices[voxel_pair] = vertex;
     return vertex;
 }
 
@@ -210,7 +201,6 @@ Point getSurfaceNormal(Point a, Point b, Point c) {
         v1[2]*v2[0] - v1[0]*v2[2],
         v1[0]*v2[1] - v1[1]*v2[0]
     );
-    //std::cout << p.x << " " << p.y << " " << p.z << std::endl;
     return p;
 }
 
@@ -302,7 +292,6 @@ void Mesh::recursiveBlend(VoxelIndex index, VoxelIndex center, double weight, do
     for (size_t i = 0; i < already_set.size(); i++) {
         if (already_set[i] == index) return;
     }
-    //if (getVoxel(index)->getValue() != -1.0 && !initial) return;
     double distance = indexDistance(index, center);
     
     if (distance != 0.0) {
@@ -350,20 +339,31 @@ void Mesh::depthFill(int floor_size) {
             }
         }
     }
-    // for (size_t i = 0; i < voxels.size(); i++) {
-    //     Voxel* v = voxels[i];
-    //     if (v->getValue() != -1.0) {
-    //         for (int z = floor_size; z < num_voxelsZ-1; z++) {
-    //             VoxelIndex index = v->getIndex();
-    //             index.z = z;
-    //             getVoxel(index)->setValue(v->getValue());
-    //         }
-    //     }
-    // }
+}
+
+void Mesh::cutoff(bool flat) {
+    // Empty sides - Top and bottom
+    for (int x = 0; x < num_voxelsX; x++) {
+        for (int z = 0; z < num_voxelsZ; z++) {
+            getVoxel(VoxelIndex(x, 0, z))->setValue(1.0); 
+            getVoxel(VoxelIndex(x, num_voxelsY-1, z))->setValue(1.0);
+        }
+    }
+    // Empty sides - Right and left
     for (int y = 0; y < num_voxelsY; y++) {
-        for (int x = 0; x < num_voxelsX; x++) {
-            getVoxel(VoxelIndex(x, y, num_voxelsZ-1))->setValue(1.0);
-        }   
+        for (int z = 0; z < num_voxelsZ; z++) {
+            getVoxel(VoxelIndex(0, y, z))->setValue(1.0); 
+            getVoxel(VoxelIndex(num_voxelsX-1, y, z))->setValue(1.0);
+        }
+    }
+    if (!flat) {    // Mesh is 3D, also empty Top and bottom
+        // Empty top and bottom
+        for (int y = 0; y < num_voxelsY; y++) {
+            for (int x = 0; x < num_voxelsX; x++) {
+                getVoxel(VoxelIndex(x, y, 0))->setValue(1.0);
+                getVoxel(VoxelIndex(x, y, num_voxelsZ-1))->setValue(1.0);
+            }   
+        }
     }
 }
 

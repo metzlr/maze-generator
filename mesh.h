@@ -1,14 +1,15 @@
 #ifndef MESH_H_
 #define MESH_H_
 
-#include <map>
+// #include <map>
+#include <unordered_map>
 #include <fstream>
 #include <vector>
 #include <array>
 #include "voxel.h"
 #include "triangle_vertex.h"
 
-typedef std::map<std::pair<Voxel*, Voxel*>, TriangleVertex*, VoxelPairByID> triangle_vertex_map;
+typedef std::unordered_map<std::pair<Voxel*, Voxel*>, TriangleVertex*, VoxelPairHash, VoxelPairEquality> triangle_vertex_map;
 
 class Mesh {
 public:
@@ -24,6 +25,7 @@ public:
     void triangulate3D(double surfaceValue);
     void blend(double radius, int z, double weight=0.5);
     void depthFill(int floorSize);
+    void cutoff(bool flat);
 
     void debugPrint2D(int z) const;
     void debugPrintSolution2D(int z, const std::vector<Voxel*>& sol) const;
@@ -47,7 +49,6 @@ private:
     int num_voxelsX;
     int num_voxelsY;
     int num_voxelsZ;
-    //int vertex_id_count;
 
     std::vector<Voxel*> voxels;
     std::vector<Triangle> triangles;
