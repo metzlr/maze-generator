@@ -1,0 +1,230 @@
+
+body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: normal;
+    background-color: #2c2c2c;
+    color: #f8f8f8;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 200px;
+  height: 10px;
+  border-radius: 5px;
+  background: #f8f8f8;
+  outline: none;
+  opacity: 1;
+  margin: 10px 10px 10px 10px;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+p.slider-value {
+  margin: auto;
+}
+
+.slider:hover {
+  opacity: 0.75;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #23b0e8;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: none;
+  background: #23b0e8;
+  cursor: pointer;
+}
+
+.generate-maze-button {
+  background-color: #23b0e8; 
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  /* display: inline-block; */
+  font-size: 20px;
+  border-radius: 8px;
+  width: 200px;
+  cursor: pointer;
+  margin: 15px 15px 15px 15px;
+  transition-duration: 0.4s;
+  box-shadow: 0px 4px 5px 5px rgba(0,0,0,0.2);
+  
+  font-weight: bold;
+  font-variant: small-caps;
+}
+
+.generate-maze-button:hover {
+  background-color: #156a8c; 
+  color: #f8f8f8;
+}
+
+.maze-container {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.maze-canvas-container {
+  /* display: flex; */
+  position: relative;
+  /* align-items: center; */
+  /* justify-content: center; */
+  /* width: 100%;
+  height: 100%; */
+}
+
+.maze-canvas {
+  width: min(75vw, 75vh);
+  height: min(75vw, 75vh);
+  border: 7px solid rgb(116, 116, 116);
+  border-radius: 10px;
+  box-shadow: 0 0px 10px 5px rgba(0, 0, 0, 0.5);
+  margin: 10px 10px 10px 10px;
+}
+
+.canvas-checkbox-container {
+  position: absolute;
+  left: 2rem;
+  top: 1.25rem;
+  z-index: 10;
+  color: #1f1f1f;
+}
+
+.canvas-checkbox {
+  margin: 0px 15px 0px 5px;
+}
+
+ /* Customize the label (the container) */
+.check-container {
+  display: flex;
+  flex-flow: row-reverse;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.check-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  margin: 5px 7px 5px 5px;
+  height: 20px;
+  width: 20px;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+}
+
+/* On mouse-over, add a grey background color */
+.check-container:hover input ~ .checkmark {
+  background-color: #f8f8f8;
+}
+
+/* When the checkbox is checked, add a blue background */
+.check-container input:checked ~ .checkmark {
+  background-color: #23b0e8;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: relative;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.check-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.check-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid #f8f8f8;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+} 
+
+.select-container {
+  margin: 10px 10px 10px 10px;
+}
+
+.select {
+  /* background-color: #23b0e8; */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 30px;
+  outline: none;
+  color: #2c2c2c;
+  border: solid #f8f8f8; 
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  background-image: url(down-arrow.png);
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  background-position: right; 
+  background-size: 12px;
+  margin: 0px 0px 0px 8px;
+
+}
+select::-ms-expand {
+  display: none; /* Hide the default arrow in Internet Explorer 10 and Internet Explorer 11 */
+}
+
+.flex-row-centered {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+}
+.flex-row {
+  display: flex;
+  flex-flow: row wrap;
+}
+.flex-col-centered {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+}
+.flex-col {
+  display: flex;
+  flex-flow: column wrap;
+}
+.initial {
+  flex: initial;
+}
