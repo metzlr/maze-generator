@@ -7,6 +7,10 @@ body {
     color: #f8f8f8;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 5 10 5 10;
+}
+
 .slider {
   -webkit-appearance: none;
   width: 200px;
