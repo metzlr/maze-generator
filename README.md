@@ -1,5 +1,6 @@
 # maze-generator
 ## Generates mazes and outputs a 2D or 3D triangle mesh
+#### [Click for live demo](https://metzlr.github.io/maze-generator/)
 
 ![Maze pictures](/assets/images/maze-preview.png "Preview")
 
