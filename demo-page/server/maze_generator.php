@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     } else if ($height > 150) {
         $height = 150;
     }
-    $mazeData = shell_exec("../maze-generator-scripts/maze_generator_old -w ". $width ." -h ". $height ." -o");
+    $mazeData = shell_exec("./scripts/maze_generator_old -w ". $width ." -h ". $height ." -o");
     http_response_code(200);
     echo json_encode($mazeData);
 }

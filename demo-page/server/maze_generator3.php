@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $startString = " -center ". $centerX ." ". $centerY;
     }
     $mazeData = shell_exec(
-        "../maze-generator-scripts/maze_generator -width ". $width .
+        "./scripts/maze_generator -width ". $width .
         " -height ". $height.
         " -depth ". $depth.
         " -detail ". $resolution. 

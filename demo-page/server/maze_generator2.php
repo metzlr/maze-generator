@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $startString = " -center ". $centerX ." ". $centerY;
     }
     //error_log("../maze-generator-scripts/maze_generator -width ". $width ." -height ". $height . " -detail ". $resolution ." -radius ". $radius . $startString . " --2d ". $blocky_arg ." --solution", 0);
-    $mazeData = shell_exec("../maze-generator-scripts/maze_generator -width ". $width ." -height ". $height . " -detail ". $resolution ." -radius ". $radius . $startString . " --2d ". $blocky_arg ." --solution");
+    $mazeData = shell_exec("./scripts/maze_generator -width ". $width ." -height ". $height . " -detail ". $resolution ." -radius ". $radius . $startString . " --2d ". $blocky_arg ." --solution");
     http_response_code(200);
     echo json_encode($mazeData);
 }
