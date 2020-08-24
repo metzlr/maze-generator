@@ -10,7 +10,7 @@ class Maze {
     }
     this.endpointURL = endpointURL;
     //this.baseURL = 'http://localhost:8000';
-    this.baseURL = 'http://underinformed.net';
+    this.baseURL = 'https://underinformed.net';
     this.seed = undefined;
     this.loading = false;
     this.size = {
