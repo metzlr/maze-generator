@@ -7,9 +7,9 @@ body {
     color: #f8f8f8;
 }
 
-h1, h2, h3, h4, h5, h6 {
+/* h1, h2, h3, h4, h5, h6 {
   margin: 5 10 0 10;
-}
+} */
 
 .slider {
   -webkit-appearance: none;
@@ -81,7 +81,7 @@ p.slider-value {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 20px;
 }
 
