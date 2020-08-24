@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy": "gh-pages -d demo-page -b gh-pages -m 'Deploying to Github Pages'"
+    "deploy": "gh-pages -d demo-page/public -b gh-pages -m 'Deploying to Github Pages'"
   },
   "repository": {
     "type": "git",
