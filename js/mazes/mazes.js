@@ -42,41 +42,43 @@ class Maze {
   }
 }
 
+// BASIC MAZE
 
-
-var maze1 = (function() {
-  "use strict";
-  function getNewMaze() {
-    if (!maze.loading) {
-      maze.loading = true;
-      maze.fetchMaze().then((data) => {
-        mazeFunctions.parseBasicMaze(data, maze);
-        mazeFunctions.drawBasicMaze(maze);
-        maze.loading = false;
-      })
-    }
-  };
-  var maze = new Maze(document.querySelector("#first-maze-container"), '/maze_generator.php', getNewMaze, 
-    {
-      "width": 20,
-      "height": 20,
-    }, 
-    '2d',
-  );
+// var maze1 = (function() {
+//   "use strict";
+//   function getNewMaze() {
+//     if (!maze.loading) {
+//       maze.loading = true;
+//       maze.fetchMaze().then((data) => {
+//         mazeFunctions.parseBasicMaze(data, maze);
+//         mazeFunctions.drawBasicMaze(maze);
+//         maze.loading = false;
+//       })
+//     }
+//   };
+//   var maze = new Maze(document.querySelector("#first-maze-container"), '/maze_generator.php', getNewMaze, 
+//     {
+//       "width": 20,
+//       "height": 20,
+//     }, 
+//     '2d',
+//   );
   
-  var widthSlider = customUI.createCustomSlider("width", { enabled: true, value: 20, min: 4, max: 150, step: 1, text: "Width", slide: ((event, newValue) => {
-      maze.inputs["width"] = newValue;
-    }),
-  });
-  var heightSlider = customUI.createCustomSlider("height", { enabled: true, value: 20, min: 4, max: 150, step: 1, text: "Height", slide: ((event, newValue) => {
-      maze.inputs["height"] = newValue;
-    }),
-  });
+//   var widthSlider = customUI.createCustomSlider("width", { enabled: true, value: 20, min: 4, max: 150, step: 1, text: "Width", slide: ((event, newValue) => {
+//       maze.inputs["width"] = newValue;
+//     }),
+//   });
+//   var heightSlider = customUI.createCustomSlider("height", { enabled: true, value: 20, min: 4, max: 150, step: 1, text: "Height", slide: ((event, newValue) => {
+//       maze.inputs["height"] = newValue;
+//     }),
+//   });
 
-  maze.addControls([ [widthSlider, heightSlider] ]);
-  getNewMaze();
+//   maze.addControls([ [widthSlider, heightSlider] ]);
+//   getNewMaze();
   
-})();
+// })();
+
+// 2D MESH MAZE
 
 var maze2 = (function() {
   "use strict";
@@ -185,6 +187,8 @@ var maze2 = (function() {
   getNewMaze();
 
 })();
+
+// 3D Mesh Maze
 
 var maze3 = (function() {
 
