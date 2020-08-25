@@ -35,7 +35,10 @@ const fsSource = `
     // will make it a unit vector again
     vec3 normal = normalize(v_normal);
 
-    float light = dot(normal, u_reverseLightDirection);
+    float dirLightColor = 0.8;
+    float ambientLightColor = 0.2;
+
+    float light = dot(normal, u_reverseLightDirection) * dirLightColor + ambientLightColor;
 
     gl_FragColor = u_color;
 

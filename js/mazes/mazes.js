@@ -308,8 +308,6 @@ var maze3 = (function() {
     fieldOfViewRadians: degToRad(60),
   }
 
-  
-
   var canvas = maze.canvas;
   var gl = maze.gl;
   maze.glExt = gl.getExtension('OES_element_index_uint');
@@ -356,7 +354,9 @@ var maze3 = (function() {
 
   function mouseScroll(e) {
     event.preventDefault();
-    maze.state.scale += e.deltaY * -0.01;
+    var direction = e.deltaY/Math.abs(e.deltaY);
+    //maze.state.scale += e.deltaY * -0.01;
+    maze.state.scale += direction * -0.03;
     maze.state.scale = Math.min(Math.max(0.01, maze.state.scale), 4);
   };
 
