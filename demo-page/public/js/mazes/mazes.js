@@ -12,6 +12,7 @@ class Maze {
     //this.baseURL = 'http://localhost:8000';
     this.baseURL = 'https://underinformed.net';
     this.seed = undefined;
+    this._loading;
     this.loading = false;
     this.size = {
       x: undefined,
@@ -22,6 +23,16 @@ class Maze {
     this.inputs = defaultInputs;
     this.canvasSettings = {};
     
+    this._lastFetchTime = 
+    this._secondsBetweenRequests = 1;
+  }
+
+  set loading(val) {
+    this._loading = val;
+    this.container.querySelector("div.loading").style.display = val ? "" : "none";
+  }
+  get loading() {
+    return this._loading;
   }
 
   addControls(controls) {
@@ -36,9 +47,13 @@ class Maze {
   }
 
   fetchMaze() {
-    var url = new URL(this.endpointURL, this.baseURL);
-    url.search = new URLSearchParams(this.inputs).toString();
-    return fetch(url).then(response => { return response.json(); });
+    const now = Date.now()
+    if (!this._lastFetchTime || now - this._lastFetchTime > this._secondsBetweenRequests * 1000) {
+      this._lastFetchTime = now;
+      let url = new URL(this.endpointURL, this.baseURL);
+      url.search = new URLSearchParams(this.inputs).toString();
+      return fetch(url).then(response => { return response.json(); });
+    }
   }
 }
 
@@ -86,11 +101,17 @@ var maze2 = (function() {
   function getNewMaze() {
     if (!maze.loading) {
       maze.loading = true;
-      maze.fetchMaze().then((data) => {
-        mazeFunctions.parseMeshMaze2D(data, maze);
-        mazeFunctions.drawMeshMaze2D(maze);
+      const response = maze.fetchMaze();
+      if (response !== undefined) {
+        response.then((data) => {
+          mazeFunctions.parseMeshMaze2D(data, maze);
+          mazeFunctions.drawMeshMaze2D(maze);
+          maze.loading = false;
+        })
+      } else {
         maze.loading = false;
-      })
+        alert(`Please wait at least ${maze._secondsBetweenRequests} second${maze._secondsBetweenRequests !== 1 ? "s" : ""} between maze requests`)
+      }
     }
   };
 
@@ -108,6 +129,7 @@ var maze2 = (function() {
     },
     '2d',
   );
+
   maze.addCanvasCheckbox(canvasFunctions.createCanvasCheckbox("showTriangles", { value: false, type: "checkbox", text: "Show Triangles", change: (event, value) => {
       maze.canvasSettings['showTriangles'] = value;
       mazeFunctions.drawMeshMaze2D(maze);
@@ -195,12 +217,19 @@ var maze3 = (function() {
   function getNewMaze() {
     if (!maze.loading) {
       maze.loading = true;
-      maze.fetchMaze().then((data) => {
-        mazeFunctions.parseMeshMaze3D(data, maze);
-        fillMazeBuffers();
-        requestAnimationFrame(drawScene);
+      const response = maze.fetchMaze()
+      if (response !== undefined) {
+        response.then((data) => {
+          mazeFunctions.parseMeshMaze3D(data, maze);
+          fillMazeBuffers();
+          requestAnimationFrame(drawScene);
+          maze.loading = false;
+        })
+      } else {
         maze.loading = false;
-      })
+        alert(`Please wait at least ${maze._secondsBetweenRequests} second${maze._secondsBetweenRequests !== 1 ? "s" : ""} between maze requests`)
+      }
+      
     }
   };
 

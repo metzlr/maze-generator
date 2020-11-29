@@ -98,6 +98,9 @@ var mazeFunctions = (function() {
       <div class="flex-col-centered configure-maze-container"></div>
       <button class="generate-maze-button">Generate Maze</button>
       <div class="maze-canvas-container">
+        <div class="loading">
+          <span>Loading...</span>
+        </div>
         <canvas class="maze-canvas"></canvas>
         <div class="canvas-checkbox-container flex-row-centered"></div>
       </div>

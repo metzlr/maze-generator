@@ -94,6 +94,27 @@ p.slider-value {
   height: 100%; */
 }
 
+.maze-canvas-container > .loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.9;
+  background-color: black;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.maze-canvas-container > .loading > span {
+  color: white;
+  font-size: 30px;
+}
+
+.maze-canvas-container
+
 .maze-canvas {
   width: min(75vw, 75vh);
   height: min(75vw, 75vh);
@@ -107,7 +128,7 @@ p.slider-value {
   position: absolute;
   left: 2rem;
   top: 1.25rem;
-  z-index: 10;
+  z-index: 1;
   color: #1f1f1f;
 }
 
