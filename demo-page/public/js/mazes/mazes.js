@@ -383,9 +383,15 @@ var maze3 = (function() {
 
   function mouseScroll(e) {
     event.preventDefault();
-    var direction = e.deltaY/Math.abs(e.deltaY);
-    //maze.state.scale += e.deltaY * -0.01;
-    maze.state.scale += direction * -0.03;
+    // Get scroll direction
+    var direction = 0;
+    if (Math.abs(e.deltaY) !== 0) {   // Don't divide by zero
+      direction = e.deltaY/Math.abs(e.deltaY);
+    }
+    // Enforce min and max delta
+    var delta = Math.min(Math.max(Math.abs(e.deltaY), 1), 20);
+    maze.state.scale += delta * -0.01 * direction;
+    // Enforce min and max scale  
     maze.state.scale = Math.min(Math.max(0.01, maze.state.scale), 4);
   };
 
