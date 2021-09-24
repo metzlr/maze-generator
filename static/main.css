@@ -11,6 +11,12 @@ body {
   margin: 5 10 0 10;
 } */
 
+.notice {
+  color: red;
+  font-weight: 700;
+  font-size: large;
+}
+
 .slider {
   -webkit-appearance: none;
   width: 200px;
